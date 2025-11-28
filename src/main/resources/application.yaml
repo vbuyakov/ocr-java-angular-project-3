@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: chatop
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/chatop_db}
+    password: ${DB_PASSWORD}
+    username: ${DB_USERNAME}
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Creates tables if they don't exist, updates schema if needed
+
+    open-in-view: false
+    show-sql: true
+
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      expiration-time: ${JWT_EXPIRATION_TIME}
+server:
+  port: ${SERVER_PORT}
