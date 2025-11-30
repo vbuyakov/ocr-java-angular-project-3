@@ -12,7 +12,7 @@
 	<artifactId>chatop</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>chatop</name>
-	<description>Project 3 for </description>
+	<description>Project 3 API</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -73,6 +74,12 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <!-- ===== MapStruct === -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
         <!-- ===== jjwt ===== -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -122,6 +129,11 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>

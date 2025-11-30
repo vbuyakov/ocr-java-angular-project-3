@@ -2,6 +2,8 @@ package com.buyakov.ja.chatop.api.service;
 
 import com.buyakov.ja.chatop.api.dto.LoginUserDto;
 import com.buyakov.ja.chatop.api.dto.RegisterUserDto;
+import com.buyakov.ja.chatop.api.dto.UserInfoResponse;
+import com.buyakov.ja.chatop.api.mapper.UserMapper;
 import com.buyakov.ja.chatop.api.model.User;
 import com.buyakov.ja.chatop.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
 
     /**
@@ -50,6 +53,12 @@ public class UserService {
      */
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public UserInfoResponse getUserInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow();
+        return userMapper.toUserInfoResponse(user);
     }
 }
 

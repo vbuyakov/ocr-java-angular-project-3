@@ -4,6 +4,7 @@ import com.buyakov.ja.chatop.api.dto.LoginResponse;
 import com.buyakov.ja.chatop.api.dto.LoginUserDto;
 import com.buyakov.ja.chatop.api.dto.RegisterUserDto;
 import com.buyakov.ja.chatop.api.dto.UserInfoResponse;
+import com.buyakov.ja.chatop.api.mapper.UserMapper;
 import com.buyakov.ja.chatop.api.model.User;
 import com.buyakov.ja.chatop.api.service.JwtService;
 import com.buyakov.ja.chatop.api.service.UserService;
@@ -15,13 +16,7 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.time.format.DateTimeFormatter;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/auth")
@@ -29,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 public class AuthController {
     private final UserService userService;
     private final JwtService jwtService;
+    private final UserMapper userMapper;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterUserDto registerUserDto) {
@@ -62,15 +58,7 @@ public class AuthController {
     public ResponseEntity<UserInfoResponse> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        
-        UserInfoResponse userInfoResponse = new UserInfoResponse()
-            .setId(currentUser.getId())
-            .setEmail(currentUser.getEmail())
-            .setName(currentUser.getName())
-            .setCreated_at(currentUser.getCreatedAt().format(formatter))
-            .setUpdated_at(currentUser.getUpdatedAt().format(formatter));
 
-        return ResponseEntity.ok(userInfoResponse);
+        return ResponseEntity.ok(userMapper.toUserInfoResponse(currentUser));
     }
 }

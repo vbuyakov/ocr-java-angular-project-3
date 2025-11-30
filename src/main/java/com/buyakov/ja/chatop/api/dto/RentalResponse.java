@@ -2,16 +2,18 @@ package com.buyakov.ja.chatop.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
 @Data
-@Accessors(chain = true)
-public class UserInfoResponse {
+public class RentalResponse {
     private Long id;
     private String name;
-    private String email;
+    private Double surface;
+    private Double price;
+    private String picture;
+    private String description;
+    private String owner_id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     private LocalDateTime created_at;
