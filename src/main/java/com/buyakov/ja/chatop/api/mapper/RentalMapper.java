@@ -35,7 +35,7 @@ public interface RentalMapper {
     @Mapping(target = "updated_at", source = "updatedAt")
     @Mapping(
             target = "picture",
-            expression = "java(rental.getPicture() != null ? \"/images/rentals/\" + rental.getPicture() : null)"
+            expression = "java(rental.getPicture() != null ? \"http://localhost:3001/images/rentals/\" + rental.getPicture() : null)"
     )
     RentalResponse toResponse(Rental rental);
 

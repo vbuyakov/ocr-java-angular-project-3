@@ -1,25 +1,25 @@
 package com.buyakov.ja.chatop.api.dto;
 
 import com.buyakov.ja.chatop.api.dto.validation.OnCreate;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class RentalDto {
-    @NotNull
+    @NotBlank
     private String name;
 
-    @NotNull
+    @NotBlank
     private Double surface;
 
-    @NotNull
+    @NotBlank
     private Double price;
 
     @NotNull(groups = OnCreate.class)
     private MultipartFile picture;
 
-    @NotNull
+    @NotBlank
     private String description;
 }
