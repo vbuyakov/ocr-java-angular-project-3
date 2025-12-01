@@ -17,6 +17,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @Slf4j
 @RestController
@@ -26,39 +28,26 @@ public class RentalController {
     private final RentalService rentalService;
 
     @GetMapping
-    public ResponseEntity<RentalsResponse> getAll() {
-        return ResponseEntity.ok().body(rentalService.all());
+    public RentalsResponse getAll() {
+        return rentalService.all();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<RentalResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(rentalService.getById(id));
+    public RentalResponse getById(@PathVariable Long id) {
+        return rentalService.getById(id);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseMessage> createRental(@Validated(OnCreate.class) @ModelAttribute RentalDto rentalDto) {
-
-        try {
             rentalService.create(rentalDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage("Rental created !"));
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-            return new ResponseEntity<>(new ResponseMessage(ex.getMessage()), HttpStatus.BAD_REQUEST);
-        }
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseMessage> updateRental(@PathVariable Long id, @Validated(OnUpdate.class) @ModelAttribute RentalDto rentalDto) {
-        try {
             rentalService.update(rentalDto, id);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Rental updated !"));
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-            return new ResponseEntity<>(new ResponseMessage(ex.getMessage()), HttpStatus.BAD_REQUEST);
-        }
     }
-
-
 }

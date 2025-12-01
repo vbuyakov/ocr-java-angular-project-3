@@ -22,14 +22,7 @@ public class MessageController {
     @PostMapping()
     public ResponseEntity<ResponseMessage>
     sendMessage(@RequestBody MessageDto messageDto) {
-
-        try {
             messageService.sendMessage(messageDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage("Message sent successfully!"));
-        } catch (Exception e) {}
-
-        return  ResponseEntity.notFound().build();
     }
-
-
 }
