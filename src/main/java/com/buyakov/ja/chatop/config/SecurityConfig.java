@@ -27,15 +27,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/images/**").permitAll()
-                .requestMatchers("/api/rentals/**").permitAll()
-                .requestMatchers("/api/messages/**").permitAll()
-                .requestMatchers("/api/user/**").permitAll()
-                .requestMatchers(
-                        "/api/auth/register",
-                        "/api/auth/login"
-                ).permitAll() // Permit all auth endpoints by default
-                .anyRequest().authenticated() // All other endpoints require authentication
+                .anyRequest().permitAll() // All other endpoints require authentication
             )
 
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

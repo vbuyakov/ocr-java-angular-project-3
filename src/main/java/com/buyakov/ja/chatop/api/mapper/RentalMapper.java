@@ -30,9 +30,7 @@ public interface RentalMapper {
     void updateEntityFromDto(RentalDto dto, @MappingTarget Rental rental);
 
 
-    @Mapping(target = "owner_id", source = "owner.id")
-    @Mapping(target = "created_at", source = "createdAt")
-    @Mapping(target = "updated_at", source = "updatedAt")
+    @Mapping(target = "ownerId", source = "owner.id")
     @Mapping(
             target = "picture",
             expression = "java(rental.getPicture() != null ? \"http://localhost:3001/images/rentals/\" + rental.getPicture() : null)"

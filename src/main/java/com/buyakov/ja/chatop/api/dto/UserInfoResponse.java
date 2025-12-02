@@ -1,6 +1,7 @@
 package com.buyakov.ja.chatop.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -13,8 +14,11 @@ public class UserInfoResponse {
     private String name;
     private String email;
 
+    @JsonProperty("created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
+
+    @JsonProperty("updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 }

@@ -17,14 +17,13 @@ public class FileStorageService {
     private String rootDir;
 
     public String store(MultipartFile file, String subFolder ) throws IOException {
+            Path dir = Paths.get(rootDir + subFolder);
+            Files.createDirectories(dir);
 
-        Path dir = Paths.get(rootDir + subFolder);
-        Files.createDirectories(dir);
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path target = dir.resolve(fileName);
 
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path target = dir.resolve(fileName);
-
-        Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-        return fileName;
+            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+            return fileName;
     }
 }

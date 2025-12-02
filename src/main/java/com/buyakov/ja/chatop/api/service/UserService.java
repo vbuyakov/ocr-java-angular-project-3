@@ -3,6 +3,8 @@ package com.buyakov.ja.chatop.api.service;
 import com.buyakov.ja.chatop.api.dto.LoginUserDto;
 import com.buyakov.ja.chatop.api.dto.RegisterUserDto;
 import com.buyakov.ja.chatop.api.dto.UserInfoResponse;
+import com.buyakov.ja.chatop.api.exception.AuthException;
+import com.buyakov.ja.chatop.api.exception.ResourceNotFoundException;
 import com.buyakov.ja.chatop.api.mapper.UserMapper;
 import com.buyakov.ja.chatop.api.model.User;
 import com.buyakov.ja.chatop.api.repository.UserRepository;
@@ -43,7 +45,7 @@ public class UserService {
                 )
         );
         return  userRepository.findByEmail(loginUserDto.getEmail())
-                .orElseThrow();
+                .orElseThrow(() -> new AuthException("Invalid email or password"));
     }
 
     /**
@@ -55,7 +57,7 @@ public class UserService {
 
     public UserInfoResponse getUserInfo(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow();
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return userMapper.toUserInfoResponse(user);
     }
 }

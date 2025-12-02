@@ -1,6 +1,7 @@
 package com.buyakov.ja.chatop.api.service;
 
 import com.buyakov.ja.chatop.api.dto.MessageDto;
+import com.buyakov.ja.chatop.api.exception.ResourceNotFoundException;
 import com.buyakov.ja.chatop.api.mapper.MessageMapper;
 import com.buyakov.ja.chatop.api.model.Message;
 import com.buyakov.ja.chatop.api.model.Rental;
@@ -19,12 +20,12 @@ public class MessageService {
     private final RentalRepository rentalRepository;
     private final MessageMapper messageMapper;
 
-    public Message sendMessage(MessageDto messageDto) throws Exception {
+    public Message sendMessage(MessageDto messageDto) throws ResourceNotFoundException {
 
         User user = userRepository.findById(messageDto.getUserId())
-                .orElseThrow(() -> new Exception("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Rental rental = rentalRepository.findById(messageDto.getRentalId())
-                .orElseThrow(() -> new Exception("Rental not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
         Message message = messageMapper.dtoToMessage(messageDto, user, rental);
         return messageRepository.save(message);
     }

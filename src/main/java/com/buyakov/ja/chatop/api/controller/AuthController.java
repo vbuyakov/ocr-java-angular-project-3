@@ -4,10 +4,15 @@ import com.buyakov.ja.chatop.api.dto.LoginResponse;
 import com.buyakov.ja.chatop.api.dto.LoginUserDto;
 import com.buyakov.ja.chatop.api.dto.RegisterUserDto;
 import com.buyakov.ja.chatop.api.dto.UserInfoResponse;
+import com.buyakov.ja.chatop.api.exception.AuthException;
+import com.buyakov.ja.chatop.api.exception.DataConflictException;
 import com.buyakov.ja.chatop.api.mapper.UserMapper;
 import com.buyakov.ja.chatop.api.model.User;
 import com.buyakov.ja.chatop.api.service.JwtService;
 import com.buyakov.ja.chatop.api.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/auth")
+@Tag(name = "Authentification")
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
@@ -29,9 +35,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterUserDto registerUserDto) {
         if(userService.existsByEmail(registerUserDto.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
+            throw new DataConflictException("Email already in use");
         }
-
         userService.registerUser(registerUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -47,18 +52,19 @@ public class AuthController {
             loginResponse.setToken(jwtToken);
             return ResponseEntity.ok(loginResponse);
         } catch (BadCredentialsException | AuthenticationCredentialsNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login");
+            throw new AuthException("Invalid email or password");
         }
     }
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()") // Protected endpoint - requires authentication
+    @Operation(
+            summary = "Get current authenticated user info",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     public ResponseEntity<UserInfoResponse> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-
         return ResponseEntity.ok(userMapper.toUserInfoResponse(currentUser));
     }
 }

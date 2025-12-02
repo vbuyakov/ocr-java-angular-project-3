@@ -1,6 +1,7 @@
 package com.buyakov.ja.chatop.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,10 +14,15 @@ public class RentalResponse {
     private Double price;
     private String picture;
     private String description;
-    private String owner_id;
 
+    @JsonProperty("owner_id")
+    private String ownerId;
+
+    @JsonProperty("created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
+
+    @JsonProperty("updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 }

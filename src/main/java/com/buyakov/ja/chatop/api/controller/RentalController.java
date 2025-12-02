@@ -7,6 +7,9 @@ import com.buyakov.ja.chatop.api.dto.ResponseMessage;
 import com.buyakov.ja.chatop.api.dto.validation.OnCreate;
 import com.buyakov.ja.chatop.api.dto.validation.OnUpdate;
 import com.buyakov.ja.chatop.api.service.RentalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,48 +20,46 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/rentals")
+@Tag(name = "Rentals")
 public class RentalController {
     private final RentalService rentalService;
 
     @GetMapping
-    public ResponseEntity<RentalsResponse> getAll() {
-        return ResponseEntity.ok().body(rentalService.all());
+    public RentalsResponse getAll() {
+        return rentalService.all();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<RentalResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(rentalService.getById(id));
+    public RentalResponse getById(@PathVariable Long id) {
+        return rentalService.getById(id);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Create rental property",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     public ResponseEntity<ResponseMessage> createRental(@Validated(OnCreate.class) @ModelAttribute RentalDto rentalDto) {
-
-        try {
             rentalService.create(rentalDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage("Rental created !"));
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-            return new ResponseEntity<>(new ResponseMessage(ex.getMessage()), HttpStatus.BAD_REQUEST);
-        }
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Change rental property",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     public ResponseEntity<ResponseMessage> updateRental(@PathVariable Long id, @Validated(OnUpdate.class) @ModelAttribute RentalDto rentalDto) {
-        try {
             rentalService.update(rentalDto, id);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Rental updated !"));
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-            return new ResponseEntity<>(new ResponseMessage(ex.getMessage()), HttpStatus.BAD_REQUEST);
-        }
     }
-
-
 }
