@@ -10,6 +10,9 @@ import com.buyakov.ja.chatop.api.mapper.UserMapper;
 import com.buyakov.ja.chatop.api.model.User;
 import com.buyakov.ja.chatop.api.service.JwtService;
 import com.buyakov.ja.chatop.api.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/auth")
+@Tag(name = "Authentification")
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
@@ -54,6 +58,10 @@ public class AuthController {
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()") // Protected endpoint - requires authentication
+    @Operation(
+            summary = "Get current authenticated user info",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     public ResponseEntity<UserInfoResponse> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();

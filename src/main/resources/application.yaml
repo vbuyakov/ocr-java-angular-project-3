@@ -1,3 +1,6 @@
+server:
+  port: ${SERVER_PORT}
+
 spring:
   application:
     name: chatop
@@ -25,5 +28,6 @@ spring:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
       expiration-time: ${JWT_EXPIRATION_TIME}
-server:
-  port: ${SERVER_PORT}
+springdoc:
+  swagger-ui:
+    operations-sorter: method

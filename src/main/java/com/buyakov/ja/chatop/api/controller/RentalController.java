@@ -7,6 +7,9 @@ import com.buyakov.ja.chatop.api.dto.ResponseMessage;
 import com.buyakov.ja.chatop.api.dto.validation.OnCreate;
 import com.buyakov.ja.chatop.api.dto.validation.OnUpdate;
 import com.buyakov.ja.chatop.api.service.RentalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/rentals")
+@Tag(name = "Rentals")
 public class RentalController {
     private final RentalService rentalService;
 
@@ -39,6 +43,10 @@ public class RentalController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Create rental property",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     public ResponseEntity<ResponseMessage> createRental(@Validated(OnCreate.class) @ModelAttribute RentalDto rentalDto) {
             rentalService.create(rentalDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage("Rental created !"));
@@ -46,6 +54,10 @@ public class RentalController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Change rental property",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     public ResponseEntity<ResponseMessage> updateRental(@PathVariable Long id, @Validated(OnUpdate.class) @ModelAttribute RentalDto rentalDto) {
             rentalService.update(rentalDto, id);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Rental updated !"));
